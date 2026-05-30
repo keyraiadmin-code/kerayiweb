@@ -1,8 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { Building2, Users, CreditCard, Wrench, TrendingUp, AlertCircle } from "lucide-react";
+import { Building2, Users, CreditCard, Wrench, TrendingUp, AlertCircle, Sparkles, ArrowRight } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
 import Link from "next/link";
 
@@ -19,6 +20,7 @@ export default async function DashboardPage() {
 
   const orgId = profile?.org_id;
 
+  // Fetch aggregates in parallel
   const [
     { count: propCount },
     { count: tenantCount },
@@ -94,6 +96,27 @@ export default async function DashboardPage() {
         </p>
       </div>
 
+      {/* Onboarding banner for new users */}
+      {(propCount ?? 0) === 0 && (
+        <div className="rounded-xl border-2 border-brand/20 bg-gradient-to-r from-brand/10 to-brand/5 p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div className="w-10 h-10 bg-brand/15 rounded-xl flex items-center justify-center flex-shrink-0">
+            <Sparkles className="h-5 w-5 text-brand" />
+          </div>
+          <div className="flex-1">
+            <p className="font-semibold">Set up your portfolio</p>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              You haven&apos;t added any properties yet. Follow the quick setup guide to get started.
+            </p>
+          </div>
+          <Link href="/onboarding">
+            <Button className="gap-2 flex-shrink-0">
+              Start Setup <ArrowRight className="h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+      )}
+
+      {/* Alert for pending */}
       {pendingPayments > 0 && (
         <div className="flex items-center gap-3 bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
           <AlertCircle className="h-5 w-5 text-yellow-600 flex-shrink-0" />
@@ -107,6 +130,7 @@ export default async function DashboardPage() {
         </div>
       )}
 
+      {/* Stats grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map(({ label, value, icon: Icon, href, color, bg }) => (
           <Link key={label} href={href}>
@@ -125,7 +149,9 @@ export default async function DashboardPage() {
         ))}
       </div>
 
+      {/* Recent activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Recent Payments */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-base">Recent Payments</CardTitle>
@@ -166,6 +192,7 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
 
+        {/* Recent Maintenance */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-base">Recent Maintenance</CardTitle>
@@ -198,6 +225,7 @@ export default async function DashboardPage() {
         </Card>
       </div>
 
+      {/* Quick links */}
       <Card>
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
