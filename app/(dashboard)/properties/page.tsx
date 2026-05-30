@@ -1,8 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Building2, Plus, MapPin, Home } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Building2, Plus, MapPin } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -27,7 +27,6 @@ export default async function PropertiesPage() {
     console.error("Properties fetch error:", error);
   }
 
-  // Get unit counts for each property
   const propertyIds = (properties || []).map((p) => p.id);
   const { data: units } = propertyIds.length
     ? await supabase
@@ -55,10 +54,12 @@ export default async function PropertiesPage() {
             Manage your rental properties
           </p>
         </div>
-        <Button className="gap-2">
-          <Plus className="h-4 w-4" />
-          Add Property
-        </Button>
+        <Link href="/properties/new">
+          <Button className="gap-2">
+            <Plus className="h-4 w-4" />
+            Add Property
+          </Button>
+        </Link>
       </div>
 
       {!properties?.length ? (
@@ -68,10 +69,12 @@ export default async function PropertiesPage() {
           <p className="text-muted-foreground mb-4">
             Add your first property to get started
           </p>
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            Add Property
-          </Button>
+          <Link href="/properties/new">
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Property
+            </Button>
+          </Link>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -83,7 +86,6 @@ export default async function PropertiesPage() {
             return (
               <Link key={property.id} href={`/properties/${property.id}`}>
                 <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
-                  {/* Property image placeholder */}
                   <div className="h-40 bg-gradient-to-br from-brand/20 to-brand/5 rounded-t-lg flex items-center justify-center">
                     <Building2 className="h-12 w-12 text-brand/40" />
                   </div>
