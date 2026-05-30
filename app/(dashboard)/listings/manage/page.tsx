@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { ListFilter, Plus, Home, Eye } from "lucide-react";
+import { ListFilter, Plus, Home, Eye, EyeOff } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -28,7 +28,7 @@ export default async function ManageListingsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold">My Listings</h1>
           <p className="text-muted-foreground text-sm">Manage your active listings on the marketplace</p>
@@ -37,7 +37,9 @@ export default async function ManageListingsPage() {
           <Link href="/listings" target="_blank">
             <Button variant="outline" className="gap-2"><Eye className="h-4 w-4" />View Marketplace</Button>
           </Link>
-          <Button className="gap-2"><Plus className="h-4 w-4" />New Listing</Button>
+          <Link href="/listings/manage/new">
+            <Button className="gap-2"><Plus className="h-4 w-4" />New Listing</Button>
+          </Link>
         </div>
       </div>
 
@@ -46,7 +48,9 @@ export default async function ManageListingsPage() {
           <ListFilter className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
           <h3 className="font-semibold text-lg mb-2">No listings yet</h3>
           <p className="text-muted-foreground mb-4">Create a listing to attract tenants on the marketplace</p>
-          <Button><Plus className="h-4 w-4 mr-2" />New Listing</Button>
+          <Link href="/listings/manage/new">
+            <Button><Plus className="h-4 w-4 mr-2" />New Listing</Button>
+          </Link>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
