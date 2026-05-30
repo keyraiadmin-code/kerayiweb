@@ -35,7 +35,7 @@ const navItems = [
   { href: "/maintenance", icon: Wrench, key: "maintenance" as const },
   { href: "/applications", icon: ClipboardList, key: "applications" as const },
   { href: "/leases", icon: FileSignature, key: "leases" as const },
-  { href: "/listings", icon: ListFilter, key: "listings" as const },
+  { href: "/listings/manage", icon: ListFilter, key: "listings" as const },
   { href: "/vendors", icon: HardHat, key: "vendors" as const },
   { href: "/documents", icon: FolderOpen, key: "documents" as const },
   { href: "/messages", icon: MessageSquare, key: "messages" as const },
