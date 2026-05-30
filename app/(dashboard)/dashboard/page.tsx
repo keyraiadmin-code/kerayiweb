@@ -1,8 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { Building2, Users, CreditCard, Wrench, TrendingUp, AlertCircle } from "lucide-react";
+import { Building2, Users, CreditCard, Wrench, TrendingUp, AlertCircle, Sparkles, ArrowRight } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
 import Link from "next/link";
 
@@ -94,6 +95,26 @@ export default async function DashboardPage() {
           Here&apos;s what&apos;s happening with your properties
         </p>
       </div>
+
+      {/* Onboarding banner for new users */}
+      {(propCount ?? 0) === 0 && (
+        <div className="rounded-xl border-2 border-brand/20 bg-gradient-to-r from-brand/10 to-brand/5 p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div className="w-10 h-10 bg-brand/15 rounded-xl flex items-center justify-center flex-shrink-0">
+            <Sparkles className="h-5 w-5 text-brand" />
+          </div>
+          <div className="flex-1">
+            <p className="font-semibold">Set up your portfolio</p>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              You haven&apos;t added any properties yet. Follow the quick setup guide to get started.
+            </p>
+          </div>
+          <Link href="/onboarding">
+            <Button className="gap-2 flex-shrink-0">
+              Start Setup <ArrowRight className="h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+      )}
 
       {/* Alert for pending */}
       {pendingPayments > 0 && (
