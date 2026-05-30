@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export async function updateMaintenanceStatus(
   requestId: string,
@@ -64,4 +65,34 @@ export async function createMaintenanceRequest(data: {
 
   if (error) throw new Error(error.message);
   revalidatePath("/maintenance");
+}
+
+export async function createMaintenanceRequestForm(formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const org_id = formData.get("org_id") as string;
+  const unit_id = formData.get("unit_id") as string;
+  const title = formData.get("title") as string;
+  const description = formData.get("description") as string;
+  const priority = (formData.get("priority") as string) || "medium";
+  const category = (formData.get("category") as string) || null;
+
+  const { error } = await supabase.from("maintenance_requests").insert({
+    org_id,
+    unit_id,
+    title,
+    description,
+    priority,
+    category: category || null,
+    status: "open",
+  });
+
+  if (error) {
+    redirect(`/maintenance/new?error=${encodeURIComponent(error.message)}`);
+  }
+
+  revalidatePath("/maintenance");
+  redirect("/maintenance");
 }

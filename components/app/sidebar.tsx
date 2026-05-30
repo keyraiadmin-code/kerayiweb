@@ -112,29 +112,30 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
       <aside
         className={cn(
           "hidden lg:flex flex-col h-screen sticky top-0 border-r bg-card transition-all duration-300 flex-shrink-0",
-          collapsed ? "w-16" : "w-64"
+          collapsed ? "w-[60px]" : "w-64"
         )}
       >
-        <div className="flex items-center gap-3 px-4 py-5 border-b min-h-[64px]">
+        {/* Header: logo + toggle */}
+        <div
+          className={cn(
+            "flex items-center border-b min-h-[64px]",
+            collapsed ? "justify-center px-2 py-4" : "px-4 py-5 gap-2"
+          )}
+        >
           {!collapsed && (
-            <div className="flex items-center gap-2 flex-1 min-w-0">
+            <Link
+              href="/dashboard"
+              className="flex items-center gap-2 flex-1 min-w-0"
+            >
               <div className="flex-shrink-0 w-8 h-8 bg-brand rounded-lg flex items-center justify-center">
                 <Home className="h-4 w-4 text-white" />
               </div>
               <span className="font-bold text-lg text-brand truncate">Keyrai</span>
-            </div>
-          )}
-          {collapsed && (
-            <div className="flex-shrink-0 w-8 h-8 bg-brand rounded-lg flex items-center justify-center mx-auto">
-              <Home className="h-4 w-4 text-white" />
-            </div>
+            </Link>
           )}
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className={cn(
-              "flex-shrink-0 p-1.5 rounded-md hover:bg-muted transition-colors",
-              collapsed && "mx-auto"
-            )}
+            className="flex-shrink-0 p-1.5 rounded-md hover:bg-muted transition-colors text-muted-foreground"
             title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             {collapsed ? (
@@ -145,9 +146,19 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
           </button>
         </div>
 
+        {collapsed && (
+          <div className="flex justify-center py-3 border-b">
+            <Link href="/dashboard" title="Dashboard">
+              <div className="w-8 h-8 bg-brand rounded-lg flex items-center justify-center hover:opacity-80 transition-opacity">
+                <Home className="h-4 w-4 text-white" />
+              </div>
+            </Link>
+          </div>
+        )}
+
         <NavContent collapsed={collapsed} />
 
-        <div className="px-4 py-3 border-t">
+        <div className="px-3 py-3 border-t">
           {!collapsed ? (
             <p className="text-[10px] text-muted-foreground">© 2026 Keyrai</p>
           ) : (
@@ -164,12 +175,12 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
         )}
       >
         <div className="flex items-center justify-between px-4 py-5 border-b">
-          <div className="flex items-center gap-2">
+          <Link href="/dashboard" onClick={onMobileClose} className="flex items-center gap-2">
             <div className="w-8 h-8 bg-brand rounded-lg flex items-center justify-center">
               <Home className="h-4 w-4 text-white" />
             </div>
             <span className="font-bold text-lg text-brand">Keyrai</span>
-          </div>
+          </Link>
           <button
             onClick={onMobileClose}
             className="p-1.5 rounded-md hover:bg-muted transition-colors"

@@ -19,7 +19,6 @@ export default async function DashboardPage() {
 
   const orgId = profile?.org_id;
 
-  // Fetch aggregates in parallel
   const [
     { count: propCount },
     { count: tenantCount },
@@ -95,7 +94,6 @@ export default async function DashboardPage() {
         </p>
       </div>
 
-      {/* Alert for pending */}
       {pendingPayments > 0 && (
         <div className="flex items-center gap-3 bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
           <AlertCircle className="h-5 w-5 text-yellow-600 flex-shrink-0" />
@@ -109,7 +107,6 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      {/* Stats grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map(({ label, value, icon: Icon, href, color, bg }) => (
           <Link key={label} href={href}>
@@ -128,9 +125,7 @@ export default async function DashboardPage() {
         ))}
       </div>
 
-      {/* Recent activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Payments */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-base">Recent Payments</CardTitle>
@@ -171,7 +166,6 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
 
-        {/* Recent Maintenance */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-base">Recent Maintenance</CardTitle>
@@ -204,7 +198,6 @@ export default async function DashboardPage() {
         </Card>
       </div>
 
-      {/* Quick links */}
       <Card>
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
@@ -214,10 +207,10 @@ export default async function DashboardPage() {
         </CardHeader>
         <CardContent className="flex flex-wrap gap-3">
           {[
-            { label: "Add Property", href: "/properties" },
-            { label: "Add Tenant", href: "/tenants" },
-            { label: "Record Payment", href: "/payments" },
-            { label: "New Maintenance", href: "/maintenance" },
+            { label: "Add Property", href: "/properties/new" },
+            { label: "Add Tenant", href: "/tenants/new" },
+            { label: "Record Payment", href: "/payments/new" },
+            { label: "New Work Order", href: "/maintenance/new" },
             { label: "View Reports", href: "/reports" },
           ].map(({ label, href }) => (
             <Link key={href} href={href}>

@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { generateReceiptNumber } from "@/lib/utils";
 
 export async function approvePayment(paymentId: string) {
@@ -72,4 +73,57 @@ export async function submitPaymentProof(
 
   if (error) throw new Error(error.message);
   revalidatePath("/payments");
+}
+
+export async function recordPayment(formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const org_id = formData.get("org_id") as string;
+  const lease_id = formData.get("lease_id") as string;
+  const amount = parseFloat(formData.get("amount") as string);
+  const due_date = formData.get("due_date") as string;
+  const method = (formData.get("method") as string) || "cash";
+  const reference_number = (formData.get("reference_number") as string) || null;
+  const notes = (formData.get("notes") as string) || null;
+
+  const { data: lease } = await supabase
+    .from("leases")
+    .select("tenant_id")
+    .eq("id", lease_id)
+    .single();
+
+  if (!lease) {
+    redirect(`/payments/new?error=Lease+not+found`);
+  }
+
+  const receiptNumber = generateReceiptNumber();
+  const today = new Date().toISOString().split("T")[0];
+
+  const { data, error } = await supabase
+    .from("payments")
+    .insert({
+      org_id,
+      lease_id,
+      tenant_id: lease.tenant_id,
+      amount,
+      due_date,
+      paid_date: today,
+      method,
+      reference_number: reference_number || null,
+      notes: notes || null,
+      status: "approved",
+      receipt_number: receiptNumber,
+      approved_by: user.id,
+    })
+    .select("id")
+    .single();
+
+  if (error) {
+    redirect(`/payments/new?error=${encodeURIComponent(error.message)}`);
+  }
+
+  revalidatePath("/payments");
+  redirect(`/payments/${data.id}`);
 }

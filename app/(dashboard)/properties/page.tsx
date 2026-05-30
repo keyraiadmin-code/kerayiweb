@@ -1,8 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Building2, Plus, MapPin } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Building2, Plus, MapPin, Home } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -47,7 +47,7 @@ export default async function PropertiesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold">Properties</h1>
           <p className="text-muted-foreground text-sm">
@@ -55,7 +55,7 @@ export default async function PropertiesPage() {
           </p>
         </div>
         <Link href="/properties/new">
-          <Button className="gap-2">
+          <Button className="gap-2 w-full sm:w-auto">
             <Plus className="h-4 w-4" />
             Add Property
           </Button>
