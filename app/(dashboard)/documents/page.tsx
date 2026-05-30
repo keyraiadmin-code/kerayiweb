@@ -30,12 +30,12 @@ export default async function DocumentsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold">Documents</h1>
           <p className="text-muted-foreground text-sm">Uploaded leases, IDs, and other documents</p>
         </div>
-        <Button className="gap-2" disabled><FolderOpen className="h-4 w-4" />Upload (coming soon)</Button>
+        <Button className="gap-2 w-full sm:w-auto" disabled><FolderOpen className="h-4 w-4" />Upload (coming soon)</Button>
       </div>
 
       {!documents?.length ? (

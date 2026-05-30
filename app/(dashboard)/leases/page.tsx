@@ -45,12 +45,14 @@ export default async function LeasesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold">Leases</h1>
           <p className="text-muted-foreground text-sm">All lease contracts</p>
         </div>
-        <Button className="gap-2"><Plus className="h-4 w-4" />New Lease</Button>
+        <Link href="/leases/new">
+          <Button className="gap-2 w-full sm:w-auto"><Plus className="h-4 w-4" />New Lease</Button>
+        </Link>
       </div>
 
       {!leases?.length ? (
@@ -58,7 +60,9 @@ export default async function LeasesPage() {
           <FileSignature className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
           <h3 className="font-semibold text-lg mb-2">No leases yet</h3>
           <p className="text-muted-foreground mb-4">Create leases to link tenants to units</p>
-          <Button><Plus className="h-4 w-4 mr-2" />New Lease</Button>
+          <Link href="/leases/new">
+            <Button><Plus className="h-4 w-4 mr-2" />New Lease</Button>
+          </Link>
         </div>
       ) : (
         <div className="space-y-3">
