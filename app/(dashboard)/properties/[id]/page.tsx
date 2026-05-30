@@ -2,18 +2,11 @@ import { createClient } from "@/lib/supabase/server";
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import {
-  Building2,
-  MapPin,
-  ArrowLeft,
-  Plus,
-  Home,
-  Users,
-  Wrench,
+  Building2, MapPin, ArrowLeft, Plus, Home, Users, Wrench,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { formatCurrency } from "@/lib/utils";
 
 interface Props {
@@ -26,26 +19,20 @@ export default async function PropertyDetailPage({ params }: Props) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  // FIX: Simple query — no nested selects with relationships
   const { data: property, error } = await supabase
     .from("properties")
     .select("*")
     .eq("id", id)
     .single();
 
-  if (error || !property) {
-    console.error("Property fetch error:", error);
-    notFound();
-  }
+  if (error || !property) notFound();
 
-  // Separate query for units
   const { data: units } = await supabase
     .from("units")
     .select("id, unit_number, floor, bedrooms, bathrooms, size_sqm, rent_amount, status")
     .eq("property_id", id)
     .order("unit_number");
 
-  // Separate query for maintenance requests (only if there are units)
   const unitIds = (units || []).map((u) => u.id);
   const { data: maintenance } = unitIds.length
     ? await supabase
@@ -76,37 +63,39 @@ export default async function PropertyDetailPage({ params }: Props) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-start gap-4">
+      <div className="flex flex-wrap items-start gap-3">
         <Link href="/properties">
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" className="flex-shrink-0">
             <ArrowLeft className="h-4 w-4" />
           </Button>
         </Link>
-        <div className="flex-1">
-          <h1 className="text-2xl font-bold">{property.name}</h1>
+        <div className="flex-1 min-w-0">
+          <h1 className="text-xl sm:text-2xl font-bold truncate">{property.name}</h1>
           <div className="flex items-center gap-1 text-muted-foreground text-sm">
-            <MapPin className="h-3 w-3" />
-            {property.address}, {property.city}
+            <MapPin className="h-3 w-3 flex-shrink-0" />
+            <span className="truncate">{property.address}, {property.city}</span>
           </div>
         </div>
-        <Button className="gap-2">
-          <Plus className="h-4 w-4" />
-          Add Unit
-        </Button>
+        <Link href={`/properties/${id}/units/new`}>
+          <Button className="gap-2 flex-shrink-0">
+            <Plus className="h-4 w-4" />
+            Add Unit
+          </Button>
+        </Link>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-3 sm:gap-4">
         {[
-          { label: "Total Units", value: totalUnits, icon: Home, color: "text-blue-600" },
+          { label: "Total", value: totalUnits, icon: Home, color: "text-blue-600" },
           { label: "Occupied", value: occupiedUnits, icon: Users, color: "text-green-600" },
           { label: "Vacant", value: vacantUnits, icon: Building2, color: "text-orange-600" },
         ].map(({ label, value, icon: Icon, color }) => (
           <Card key={label}>
-            <CardContent className="flex items-center gap-3 pt-4">
-              <Icon className={`h-8 w-8 ${color}`} />
-              <div>
-                <p className="text-2xl font-bold">{value}</p>
+            <CardContent className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 pt-4 pb-4">
+              <Icon className={`h-6 w-6 sm:h-8 sm:w-8 ${color}`} />
+              <div className="text-center sm:text-left">
+                <p className="text-xl sm:text-2xl font-bold">{value}</p>
                 <p className="text-xs text-muted-foreground">{label}</p>
               </div>
             </CardContent>
@@ -114,7 +103,7 @@ export default async function PropertyDetailPage({ params }: Props) {
         ))}
       </div>
 
-      {/* Property info */}
+      {/* Property details */}
       <Card>
         <CardHeader>
           <CardTitle className="text-base">Property Details</CardTitle>
@@ -143,26 +132,33 @@ export default async function PropertyDetailPage({ params }: Props) {
 
       {/* Units */}
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader className="flex flex-row items-center justify-between gap-2">
           <CardTitle className="text-base">Units ({totalUnits})</CardTitle>
-          <Button size="sm" variant="outline" className="gap-2">
-            <Plus className="h-3 w-3" />
-            Add Unit
-          </Button>
+          <Link href={`/properties/${id}/units/new`}>
+            <Button size="sm" variant="outline" className="gap-1.5">
+              <Plus className="h-3 w-3" />
+              Add Unit
+            </Button>
+          </Link>
         </CardHeader>
         <CardContent>
           {!units?.length ? (
-            <p className="text-sm text-muted-foreground text-center py-6">
-              No units added yet
-            </p>
+            <div className="text-center py-8">
+              <p className="text-sm text-muted-foreground mb-3">No units added yet</p>
+              <Link href={`/properties/${id}/units/new`}>
+                <Button size="sm" variant="outline" className="gap-2">
+                  <Plus className="h-4 w-4" /> Add First Unit
+                </Button>
+              </Link>
+            </div>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-2">
               {units.map((unit) => (
                 <div
                   key={unit.id}
-                  className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50"
+                  className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 p-3 rounded-lg border hover:bg-muted/50"
                 >
-                  <div>
+                  <div className="min-w-0">
                     <p className="font-medium">Unit {unit.unit_number}</p>
                     <p className="text-xs text-muted-foreground">
                       {unit.bedrooms}BR · {unit.bathrooms}BA
@@ -170,7 +166,7 @@ export default async function PropertyDetailPage({ params }: Props) {
                       {unit.floor != null ? ` · Floor ${unit.floor}` : ""}
                     </p>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 flex-shrink-0">
                     <p className="font-semibold text-sm">
                       {formatCurrency(unit.rent_amount)}/mo
                     </p>
@@ -199,9 +195,13 @@ export default async function PropertyDetailPage({ params }: Props) {
           </CardHeader>
           <CardContent className="space-y-2">
             {maintenance.map((m) => (
-              <Link key={m.id} href={`/maintenance/${m.id}`} className="flex items-center justify-between p-2 hover:bg-muted/50 rounded-md">
-                <p className="text-sm">{m.title}</p>
-                <div className="flex gap-2">
+              <Link
+                key={m.id}
+                href={`/maintenance/${m.id}`}
+                className="flex items-center justify-between p-2 hover:bg-muted/50 rounded-md gap-2"
+              >
+                <p className="text-sm truncate">{m.title}</p>
+                <div className="flex gap-2 flex-shrink-0">
                   <Badge variant={priorityColors[m.priority] ?? "secondary"} className="text-xs">
                     {m.priority}
                   </Badge>

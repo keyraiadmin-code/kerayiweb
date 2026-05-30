@@ -86,7 +86,7 @@ const dictionaries = {
     closed: "Closed",
     // Brand
     appName: "Keyrai",
-    tagline: "Property Management for Ethiopia",
+    tagline: "Property Management Made Simple",
   },
   am: {
     // Navigation
@@ -173,7 +173,7 @@ const dictionaries = {
     closed: "ተዘግቷል",
     // Brand
     appName: "ቅይራይ",
-    tagline: "ለኢትዮጵያ የንብረት አስተዳደር",
+    tagline: "የንብረት አስተዳደር በቀላሉ",
   },
 } as const;
 
