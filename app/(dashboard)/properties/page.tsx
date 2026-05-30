@@ -55,10 +55,12 @@ export default async function PropertiesPage() {
             Manage your rental properties
           </p>
         </div>
-        <Button className="gap-2">
-          <Plus className="h-4 w-4" />
-          Add Property
-        </Button>
+        <Link href="/properties/new">
+          <Button className="gap-2">
+            <Plus className="h-4 w-4" />
+            Add Property
+          </Button>
+        </Link>
       </div>
 
       {!properties?.length ? (
@@ -68,10 +70,12 @@ export default async function PropertiesPage() {
           <p className="text-muted-foreground mb-4">
             Add your first property to get started
           </p>
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            Add Property
-          </Button>
+          <Link href="/properties/new">
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Property
+            </Button>
+          </Link>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
