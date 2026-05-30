@@ -214,10 +214,10 @@ export default async function DashboardPage() {
         </CardHeader>
         <CardContent className="flex flex-wrap gap-3">
           {[
-            { label: "Add Property", href: "/properties" },
-            { label: "Add Tenant", href: "/tenants" },
-            { label: "Record Payment", href: "/payments" },
-            { label: "New Maintenance", href: "/maintenance" },
+            { label: "Add Property", href: "/properties/new" },
+            { label: "Add Tenant", href: "/tenants/new" },
+            { label: "Record Payment", href: "/payments/new" },
+            { label: "New Work Order", href: "/maintenance/new" },
             { label: "View Reports", href: "/reports" },
           ].map(({ label, href }) => (
             <Link key={href} href={href}>

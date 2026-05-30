@@ -4,6 +4,12 @@ import { useState } from "react";
 import { Sidebar } from "./sidebar";
 import { Topbar } from "./topbar";
 
+interface Org {
+  id: string;
+  name: string;
+  slug: string;
+}
+
 interface DashboardShellProps {
   user: {
     id: string;
@@ -11,11 +17,13 @@ interface DashboardShellProps {
     full_name?: string;
     role?: string;
     avatar_url?: string;
+    org_id?: string;
   };
+  orgs: Org[];
   children: React.ReactNode;
 }
 
-export function DashboardShell({ user, children }: DashboardShellProps) {
+export function DashboardShell({ user, orgs, children }: DashboardShellProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
@@ -28,7 +36,7 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
       )}
       <Sidebar mobileOpen={mobileOpen} onMobileClose={() => setMobileOpen(false)} />
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
-        <Topbar user={user} onMenuClick={() => setMobileOpen(true)} />
+        <Topbar user={user} orgs={orgs} onMenuClick={() => setMobileOpen(true)} />
         <main className="flex-1 overflow-y-auto p-4 sm:p-6">{children}</main>
       </div>
     </div>

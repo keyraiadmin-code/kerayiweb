@@ -48,17 +48,19 @@ export default async function TenantsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold">Tenants</h1>
           <p className="text-muted-foreground text-sm">
             Manage your tenants and track trust scores
           </p>
         </div>
-        <Button className="gap-2">
-          <Plus className="h-4 w-4" />
-          Add Tenant
-        </Button>
+        <Link href="/tenants/new">
+          <Button className="gap-2 w-full sm:w-auto">
+            <Plus className="h-4 w-4" />
+            Add Tenant
+          </Button>
+        </Link>
       </div>
 
       {!tenants?.length ? (
@@ -66,10 +68,12 @@ export default async function TenantsPage() {
           <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
           <h3 className="font-semibold text-lg mb-2">No tenants yet</h3>
           <p className="text-muted-foreground mb-4">Add your first tenant to get started</p>
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            Add Tenant
-          </Button>
+          <Link href="/tenants/new">
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Tenant
+            </Button>
+          </Link>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
