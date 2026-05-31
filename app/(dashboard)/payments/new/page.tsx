@@ -89,7 +89,7 @@ export default async function NewPaymentPage({ searchParams }: Props) {
                       ? propName[0]?.name
                       : (propName as { name: string } | null)?.name;
                     return (
-                      <option key={lease.id} value={lease.id}>
+                      <option key={lease.id} value={lease.id} data-tenant-id={lease.tenant_id} data-amount={lease.rent_amount}>
                         {tenantName} — {propertyName} Unit {unitNum} (ETB {lease.rent_amount}/mo)
                       </option>
                     );
@@ -171,13 +171,56 @@ export default async function NewPaymentPage({ searchParams }: Props) {
               />
             </div>
 
+            {/* Tax / Deductions */}
+            <div className="rounded-md border border-border bg-muted/40 px-4 py-4 space-y-4">
+              <p className="text-sm font-semibold">Tax &amp; Deductions <span className="text-muted-foreground font-normal">(optional)</span></p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="space-y-1">
+                  <label className="text-sm font-medium" htmlFor="vat_amount">VAT (ETB)</label>
+                  <input
+                    id="vat_amount"
+                    name="vat_amount"
+                    type="number"
+                    min="0"
+                    step="1"
+                    defaultValue="0"
+                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-sm font-medium" htmlFor="withholding_amount">Withholding (ETB)</label>
+                  <input
+                    id="withholding_amount"
+                    name="withholding_amount"
+                    type="number"
+                    min="0"
+                    step="1"
+                    defaultValue="0"
+                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-sm font-medium" htmlFor="penalty_amount">Penalty (ETB)</label>
+                  <input
+                    id="penalty_amount"
+                    name="penalty_amount"
+                    type="number"
+                    min="0"
+                    step="1"
+                    defaultValue="0"
+                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                  />
+                </div>
+              </div>
+            </div>
+
             <div className="rounded-md bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 px-4 py-3 text-sm text-blue-800 dark:text-blue-200">
               This will record the payment as <strong>approved</strong> and generate a receipt immediately.
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
               <Button type="submit" className="flex-1" disabled={!leases?.length}>
-                Record &amp; Approve Payment
+                Record & Approve Payment
               </Button>
               <Link href="/payments">
                 <Button type="button" variant="outline" className="w-full sm:w-auto">Cancel</Button>

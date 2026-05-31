@@ -19,6 +19,7 @@ export async function createUnit(formData: FormData) {
   const size_sqm = sizeRaw ? parseFloat(sizeRaw) : null;
   const rent_amount = parseFloat(formData.get("rent_amount") as string) || 0;
   const description = formData.get("description") as string;
+  const unit_type = (formData.get("unit_type") as string) || "residential";
 
   const { error } = await supabase.from("units").insert({
     property_id,
@@ -29,6 +30,7 @@ export async function createUnit(formData: FormData) {
     size_sqm,
     rent_amount,
     description: description || null,
+    unit_type,
     status: "vacant",
   });
 

@@ -29,7 +29,7 @@ export default async function PropertyDetailPage({ params }: Props) {
 
   const { data: units } = await supabase
     .from("units")
-    .select("id, unit_number, floor, bedrooms, bathrooms, size_sqm, rent_amount, status")
+    .select("id, unit_number, floor, bedrooms, bathrooms, size_sqm, rent_amount, status, unit_type")
     .eq("property_id", id)
     .order("unit_number");
 
@@ -170,6 +170,11 @@ export default async function PropertyDetailPage({ params }: Props) {
                     <p className="font-semibold text-sm">
                       {formatCurrency(unit.rent_amount)}/mo
                     </p>
+                    {unit.unit_type && unit.unit_type !== "residential" && (
+                      <Badge variant="outline" className="text-xs capitalize">
+                        {unit.unit_type}
+                      </Badge>
+                    )}
                     <Badge variant={statusColors[unit.status] ?? "secondary"}>
                       {unit.status}
                     </Badge>
