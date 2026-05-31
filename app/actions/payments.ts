@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { generateReceiptNumber } from "@/lib/utils";
 
-export async function approvePayment(paymentId: string) {
+export async function approvePayment(paymentId: string, approvalNotes?: string) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
@@ -20,6 +20,7 @@ export async function approvePayment(paymentId: string) {
       paid_date: now.split("T")[0],
       receipt_number: receiptNumber,
       approved_by: user.id,
+      ...(approvalNotes ? { approval_notes: approvalNotes } : {}),
     })
     .eq("id", paymentId);
 
@@ -87,6 +88,9 @@ export async function recordPayment(formData: FormData) {
   const method = (formData.get("method") as string) || "cash";
   const reference_number = (formData.get("reference_number") as string) || null;
   const notes = (formData.get("notes") as string) || null;
+  const vat_amount = parseFloat(formData.get("vat_amount") as string) || 0;
+  const withholding_amount = parseFloat(formData.get("withholding_amount") as string) || 0;
+  const penalty_amount = parseFloat(formData.get("penalty_amount") as string) || 0;
 
   const { data: lease } = await supabase
     .from("leases")
@@ -113,6 +117,9 @@ export async function recordPayment(formData: FormData) {
       method,
       reference_number: reference_number || null,
       notes: notes || null,
+      vat_amount: vat_amount || null,
+      withholding_amount: withholding_amount || null,
+      penalty_amount: penalty_amount || null,
       status: "approved",
       receipt_number: receiptNumber,
       approved_by: user.id,

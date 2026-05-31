@@ -120,10 +120,41 @@ export default async function PaymentDetailPage({ params }: Props) {
                 <p className="font-mono font-medium">{payment.reference_number}</p>
               </div>
             )}
+            {(payment.vat_amount || payment.withholding_amount || payment.penalty_amount) && (
+              <div className="border rounded-md p-3 space-y-2 bg-muted/30">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Tax &amp; Deductions</p>
+                {payment.vat_amount > 0 && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">VAT</span>
+                    <span className="font-medium">{formatCurrency(payment.vat_amount)}</span>
+                  </div>
+                )}
+                {payment.withholding_amount > 0 && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Withholding Tax</span>
+                    <span className="font-medium">{formatCurrency(payment.withholding_amount)}</span>
+                  </div>
+                )}
+                {payment.penalty_amount > 0 && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Penalty</span>
+                    <span className="font-medium text-red-600">{formatCurrency(payment.penalty_amount)}</span>
+                  </div>
+                )}
+              </div>
+            )}
+
             {payment.notes && (
               <div>
                 <p className="text-muted-foreground">Notes</p>
                 <p>{payment.notes}</p>
+              </div>
+            )}
+
+            {payment.approval_notes && (
+              <div>
+                <p className="text-muted-foreground">Approval Notes</p>
+                <p>{payment.approval_notes}</p>
               </div>
             )}
 
@@ -177,30 +208,41 @@ export default async function PaymentDetailPage({ params }: Props) {
               <CardHeader>
                 <CardTitle className="text-base">Review Payment</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
+              <CardContent className="space-y-4">
                 <p className="text-sm text-muted-foreground">
                   Tenant has submitted proof of payment. Review and approve or reject.
                 </p>
-                <div className="flex gap-3">
-                  <form action={async () => {
-                    "use server";
-                    await approvePayment(id);
-                  }} className="flex-1">
-                    <Button className="w-full gap-2" type="submit">
-                      <CheckCircle2 className="h-4 w-4" />
-                      Approve
-                    </Button>
-                  </form>
-                  <form action={async () => {
-                    "use server";
-                    await rejectPayment(id);
-                  }} className="flex-1">
-                    <Button variant="destructive" className="w-full gap-2" type="submit">
-                      <XCircle className="h-4 w-4" />
-                      Reject
-                    </Button>
-                  </form>
-                </div>
+                <form action={async (formData: FormData) => {
+                  "use server";
+                  const notes = (formData.get("approval_notes") as string) || undefined;
+                  await approvePayment(id, notes);
+                }} className="space-y-3">
+                  <div className="space-y-1">
+                    <label className="text-sm font-medium" htmlFor="approval_notes">
+                      Approval Notes <span className="text-muted-foreground text-xs">(optional)</span>
+                    </label>
+                    <textarea
+                      id="approval_notes"
+                      name="approval_notes"
+                      rows={2}
+                      placeholder="Any notes about this approval..."
+                      className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+                    />
+                  </div>
+                  <Button className="w-full gap-2" type="submit">
+                    <CheckCircle2 className="h-4 w-4" />
+                    Approve Payment
+                  </Button>
+                </form>
+                <form action={async () => {
+                  "use server";
+                  await rejectPayment(id);
+                }}>
+                  <Button variant="destructive" className="w-full gap-2" type="submit">
+                    <XCircle className="h-4 w-4" />
+                    Reject
+                  </Button>
+                </form>
               </CardContent>
             </Card>
           ) : (

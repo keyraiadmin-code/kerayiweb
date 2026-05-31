@@ -171,6 +171,49 @@ export default async function NewPaymentPage({ searchParams }: Props) {
               />
             </div>
 
+            {/* Tax / Deductions */}
+            <div className="rounded-md border border-border bg-muted/40 px-4 py-4 space-y-4">
+              <p className="text-sm font-semibold">Tax &amp; Deductions <span className="text-muted-foreground font-normal">(optional)</span></p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="space-y-1">
+                  <label className="text-sm font-medium" htmlFor="vat_amount">VAT (ETB)</label>
+                  <input
+                    id="vat_amount"
+                    name="vat_amount"
+                    type="number"
+                    min="0"
+                    step="1"
+                    defaultValue="0"
+                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-sm font-medium" htmlFor="withholding_amount">Withholding (ETB)</label>
+                  <input
+                    id="withholding_amount"
+                    name="withholding_amount"
+                    type="number"
+                    min="0"
+                    step="1"
+                    defaultValue="0"
+                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-sm font-medium" htmlFor="penalty_amount">Penalty (ETB)</label>
+                  <input
+                    id="penalty_amount"
+                    name="penalty_amount"
+                    type="number"
+                    min="0"
+                    step="1"
+                    defaultValue="0"
+                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                  />
+                </div>
+              </div>
+            </div>
+
             <div className="rounded-md bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 px-4 py-3 text-sm text-blue-800 dark:text-blue-200">
               This will record the payment as <strong>approved</strong> and generate a receipt immediately.
             </div>
